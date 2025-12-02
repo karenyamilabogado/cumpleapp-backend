@@ -1,53 +1,33 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import pkg from "pg";
-
-const { Pool } = pkg;
-dotenv.config();
+const express = require("express");
+const cors = require("cors");
+const pool = require("./db"); // usamos tu db.js
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
-
-// Ruta GET: obtener todos los cumpleaños
-app.get("/cumples", async (req, res) => {
-  try {
-    const resultado = await pool.query("SELECT * FROM cumple");
-    res.json(resultado.rows);
-  } catch (error) {
-    console.error("Error al obtener cumpleaños:", error.message);
-    res.status(500).json({ error: "Error al obtener cumpleaños" });
-  }
-});
-
-// Ruta POST: guardar cumpleaños
+// Ruta para guardar cumpleaños
 app.post("/save", async (req, res) => {
+  const { nombre, fecha } = req.body;
+
   try {
-    const { nombre, fecha } = req.body;
-    console.log("Datos recibidos en backend:", req.body);
-
-    await pool.query(
-      "INSERT INTO cumple (nombre, fecha) VALUES ($1, $2)",
-      [nombre, fecha]
-    );
-
-    // ✅ Respuesta en JSON para que el frontend la interprete bien
-    res.status(200).json({ mensaje: "Guardado con éxito" });
+    await pool.query("INSERT INTO cumple (nombre, fecha) VALUES ($1, $2)", [nombre, fecha]);
+    res.status(200).send("Cumpleaños guardado");
   } catch (error) {
-    console.error("Error al guardar:", error.message);
-    res.status(500).json({ error: "Error al guardar: " + error.message });
+    console.error("Error al guardar en la base de datos:", error);
+    res.status(500).send("Error al guardar");
   }
 });
 
-// Levantar servidor
+// Ruta de prueba
+app.get("/", (req, res) => {
+  res.send("Backend funcionando correctamente");
+});
+
+// Iniciar servidor
 app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
+  console.log(`Servidor corriendo en puerto ${port}`);
 });
