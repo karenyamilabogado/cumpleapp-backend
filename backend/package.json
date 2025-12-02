@@ -2,9 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "index.cjs",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.cjs"
   },
   "dependencies": {
     "cors": "^2.8.5",
