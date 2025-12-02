@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cumpleaños App</title>
+</head>
+<body>
+  <h1>Lista de Cumpleaños 🎉🐒</h1>
+
+  <!-- Formulario para agregar cumpleaños -->
+  <form id="formCumple">
+    <input type="text" id="nombre" name="nombre" placeholder="Nombre" required />
+    <input type="date" id="fecha" name="fecha" required />
+    <button type="submit">Guardar</button>
+  </form>
+
+  <!-- Lista de cumpleaños -->
+  <h2>Lista de cumpleaños</h2>
+  <ul id="listaCumples"></ul>
+
+  <!-- Script -->
+  <script>
+    const API_BASE = "http://localhost:3001";
+
+    // 👉 Función para cargar y mostrar los cumpleaños guardados
+    async function cargarCumples() {
+      try {
+        const res = await fetch(`${API_BASE}/cumples`);
+        const data = await res.json();
+        const lista = document.getElementById("listaCumples");
+        lista.innerHTML = "";
+        data.forEach(c => {
+          const li = document.createElement("li");
+          const fechaFormateada = new Date(c.fecha).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          });
+          li.textContent = `${c.nombre} — ${fechaFormateada}`;
+          lista.appendChild(li);
+        });
+      } catch (error) {
+        console.error("Error al cargar cumpleaños:", error);
+      }
+    }
+
+    // 👉 Manejar envío del formulario
+    document.getElementById("formCumple").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value.trim();
+      const fecha = document.getElementById("fecha").value;
+
+      if (!nombre || !fecha) {
+        alert("Por favor completa todos los campos");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/save`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, fecha })
+        });
+
+        const data = await res.json();
+        alert(data.mensaje || data.error);
+
+        if (res.ok) {
+          cargarCumples();
+          document.getElementById("formCumple").reset();
+        }
+      } catch (error) {
+        console.error("Error al guardar cumpleaños:", error);
+        alert("Error al guardar");
+      }
+    });
+
+    // 👉 Cargar lista al inicio
+    cargarCumples();
+  </script>
+</body>
+</html>
