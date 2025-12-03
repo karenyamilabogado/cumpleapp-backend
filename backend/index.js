@@ -13,19 +13,15 @@ app.use(express.json());
 
 app.post("/cumples", async (req, res) => {
   const { nombre, fecha } = req.body;
-
   if (!nombre || !fecha) {
     return res.status(400).json({ error: "Nombre y fecha son requeridos" });
   }
 
   try {
-    await pool.query(
-      "INSERT INTO cumple (nombre, fecha) VALUES ($1, $2)",
-      [nombre, fecha]
-    );
+    await pool.query("INSERT INTO cumple (nombre, fecha) VALUES ($1, $2)", [nombre, fecha]);
     res.status(200).json({ mensaje: "Cumpleaños guardado correctamente ✅" });
   } catch (error) {
-    console.error("Error al guardar en la base de datos:", error);
+    console.error("Error al guardar:", error);
     res.status(500).json({ error: "Error al guardar", detalle: error.message });
   }
 });
