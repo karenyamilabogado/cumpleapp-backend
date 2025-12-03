@@ -20,7 +20,7 @@
 
   <!-- Script -->
   <script>
-    const API_BASE = "http://localhost:3001";
+    const API_BASE = "https://cumpleapp-backend.onrender.com";
 
     // 👉 Función para cargar y mostrar los cumpleaños guardados
     async function cargarCumples() {
@@ -56,7 +56,7 @@
       }
 
       try {
-        const res = await fetch(`${API_BASE}/save`, {
+        const res = await fetch(`${API_BASE}/cumples`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ nombre, fecha })

@@ -5,7 +5,7 @@ document.getElementById("formCumple").addEventListener("submit", async (e) => {
   const fecha = document.getElementById("fecha").value;
 
   try {
-    const res = await fetch("https://cumpleapp-backend.onrender.com/save", {
+    const res = await fetch("https://cumpleapp-backend.onrender.com/cumples", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
