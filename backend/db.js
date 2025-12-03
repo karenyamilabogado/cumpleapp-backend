@@ -1,6 +1,6 @@
-// db.js
-const { Pool } = require("pg");
-require("dotenv").config();
+import { Pool } from "pg";
+import dotenv from "dotenv";
+dotenv.config();
 
 const pool = new Pool({
   host: process.env.PGHOST,
@@ -9,8 +9,8 @@ const pool = new Pool({
   password: process.env.PGPASSWORD,
   port: process.env.PGPORT,
   ssl: {
-    rejectUnauthorized: false, // obligatorio para Neon
-  },
+    rejectUnauthorized: false
+  }
 });
 
-module.exports = pool;
+export default pool;
