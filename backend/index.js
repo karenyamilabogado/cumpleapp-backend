@@ -46,6 +46,8 @@ app.get("/", (req, res) => {
   res.send("Backend funcionando correctamente 🚀");
 });
 
+// 👉 Escuchar en el puerto asignado por Render
 app.listen(port, () => {
   console.log(`Servidor corriendo en puerto ${port}`);
+  console.log("✅ Deploy actualizado, usando process.env.PORT correctamente");
 });
